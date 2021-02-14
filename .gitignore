@@ -1,0 +1,9 @@
+*.iml
+*.coverage
+/**/out/
+/**/.idea/
+/**/.pytest_cache/
+/**/__pycache__/
+/**/.gradle
+/**/build
+/**/venv
