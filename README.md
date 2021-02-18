@@ -1,1 +1,1 @@
-"# PythonHexGame" 
+# PythonHexGame
