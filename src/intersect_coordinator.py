@@ -1,7 +1,17 @@
+# for more information look at
+# https://www.geeksforgeeks.org/how-to-check-if-a-given-point-lies-inside-a-polygon/
+
+# Define Infinite (Using INT_MAX
+# caused overflow problems)
 INT_MAX = 10000
 
 
 def on_segment(p: tuple, q: tuple, r: tuple) -> bool:
+    """
+    Given three colinear points p, q, r,
+    the function checks if point q lies
+    on line segment 'pr'
+    """
     if ((q[0] <= max(p[0], r[0])) &
             (q[0] >= min(p[0], r[0])) &
             (q[1] <= max(p[1], r[1])) &
@@ -12,6 +22,13 @@ def on_segment(p: tuple, q: tuple, r: tuple) -> bool:
 
 
 def orientation(p: tuple, q: tuple, r: tuple) -> int:
+    """
+    To find orientation of ordered triplet (p, q, r).
+    The function returns following values
+    0 --> p, q and r are colinear
+    1 --> Clockwise
+    2 --> Counterclockwise
+    """
     val = (((q[1] - p[1]) *
             (r[0] - q[0])) -
            ((q[0] - p[0]) *
@@ -26,6 +43,10 @@ def orientation(p: tuple, q: tuple, r: tuple) -> int:
 
 
 def do_intersect(p1, q1, p2, q2):
+    """
+    Function that returns true if
+    the line segment 'p1q1' and 'p2q2' intersect.
+    """
     # Find the four orientations needed for
     # general and special cases
     o1 = orientation(p1, q1, p2)
@@ -62,6 +83,10 @@ def do_intersect(p1, q1, p2, q2):
 
 
 def is_inside_polygon(points: list, p: tuple) -> bool:
+    """
+    Returns true if the point p lies
+    inside the polygon[] with n vertices
+    """
     n = len(points)
 
     # There must be at least 3 vertices
