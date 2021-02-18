@@ -1,8 +1,8 @@
 from typing import Sequence, List
 from queue import Queue
 
-from src.constants import *
-from src.tile import Tile, find_hexagon_cube_distance
+from constants import *
+from tile import Tile, find_hexagon_cube_distance
 import random
 
 

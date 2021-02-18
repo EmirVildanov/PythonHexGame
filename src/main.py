@@ -7,7 +7,7 @@ import time
 from game_state import GameState
 from intersect_coordinator import is_inside_polygon
 from constants import *
-from src.bot import Bot, find_best_tile_for_bot, find_game_winner
+from bot import Bot, find_best_tile_for_bot, find_game_winner
 from tile import Tile
 
 

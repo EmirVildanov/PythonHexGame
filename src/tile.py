@@ -1,4 +1,4 @@
-from src.constants import *
+from constants import *
 
 
 def define_hexagon_neighbours_indices(i_index, j_index):
