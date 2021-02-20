@@ -86,7 +86,8 @@ def find_winning_tiles_for_color(hexagons: Sequence[Tile],
 
 def find_neighbour_tiles(hexagons: Sequence[Tile], tiles: Sequence[Tile]):
     """
-    Функция, которая возвращает список всех соседних клеток из переданного списка
+    Функция, которая возвращает список всех соседних клеток
+    из переданного списка
     """
     neighbour_indices = []
     for tile in tiles:
@@ -102,7 +103,7 @@ def find_concrete_border_tiles(hexagons: Sequence[Tile],
     Функция, которая возвращает клетки, окружающие определённую границу и
     все закрашенные клетки, которые находятся рядом с границей
     """
-    visit = [False for _ in range(FIELD_SIZE)]
+    visit: List[bool] = [False for _ in range(FIELD_SIZE)]
     for tile in border_tiles:
         if tile.color == color and visit[tile.index] is False:
             visit = visit_neighbours(hexagons, tile.index, visit, color)
@@ -185,8 +186,7 @@ def find_neighbours_of_not_opposite_color(hexagons: Sequence[Tile],
 
 
 def find_path_from_tile_to_tile(hexagons: Sequence[Tile], tile1: Tile,
-                                tile2: Tile) -> \
-        List[Tile]:
+                                tile2: Tile) -> List[Tile]:
     """
     Функция, которая возвращает массив клеток поля,
     представляющий путь из клетки tile1 в клетку tile2
