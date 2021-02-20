@@ -174,8 +174,6 @@ def initialize_screen():
     На нём будет рисоваться вся игра
     """
     pygame.init()
-    # game_image = pygame.image.load('hex.png')
-    # pygame.display.set_icon(game_image)
     pygame.display.set_caption(APP_NAME)
     return pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
