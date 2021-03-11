@@ -6,10 +6,13 @@ from tile import Tile
 import random
 
 
-def visit_neighbours(hexagons: Sequence[Tile], index: int,
-                     visit_list: List[bool],
-                     color: Tuple[int],
-                     borders_list: Sequence[int] = None) -> List[bool]:
+def visit_neighbours(
+    hexagons: Sequence[Tile],
+    index: int,
+    visit_list: List[bool],
+    color: Tuple[int],
+    borders_list: Sequence[int] = None,
+) -> List[bool]:
     """
     Функция, которая посещает всех соседей клетки с индексом [index] данного цвета [color] и помечает их в
     списке индикаторов [visit_list]. Возвращает [visit_list].
@@ -32,11 +35,8 @@ def visit_neighbours(hexagons: Sequence[Tile], index: int,
     visit_list[index] = True
     borders_list.extend(current_hexagon.border_indices)
     for neighbour_indx in current_hexagon.neighbours_indices:
-        if not visit_list[neighbour_indx] \
-                and hexagons[neighbour_indx].color == color:
-            visit_neighbours(hexagons, neighbour_indx, visit_list,
-                             color,
-                             borders_list)
+        if not visit_list[neighbour_indx] and hexagons[neighbour_indx].color == color:
+            visit_neighbours(hexagons, neighbour_indx, visit_list, color, borders_list)
     return visit_list
 
 
@@ -46,18 +46,15 @@ def find_game_winner(hexagons: Sequence[Tile], index: int, color: Tuple[int]):
     указанным индексом указанный цвет. Возвразщает цвет из трёх вариантов:
     WHITE, BLUE, RED
     """
-    hexagons_visiting_list = [False for _ in
-                              range(
-                                  FIELD_SIZE)]
+    hexagons_visiting_list = [False for _ in range(FIELD_SIZE)]
     visited_borders_list = []
-    visit_neighbours(hexagons, index, hexagons_visiting_list, color,
-                     visited_borders_list)
+    visit_neighbours(
+        hexagons, index, hexagons_visiting_list, color, visited_borders_list
+    )
     game_winner = WHITE
-    if color == BLUE and (
-            0 in visited_borders_list and 2 in visited_borders_list):
+    if color == BLUE and (0 in visited_borders_list and 2 in visited_borders_list):
         game_winner = BLUE
-    elif color == RED and (
-            1 in visited_borders_list and 3 in visited_borders_list):
+    elif color == RED and (1 in visited_borders_list and 3 in visited_borders_list):
         game_winner = RED
     return game_winner
 
@@ -67,6 +64,7 @@ class Bot:
     Класс, который представляет из себя сущность бота,
     который будет играть против реального игрока
     """
+
     def __init__(self, color: Tuple[int]):
         self.color = color
 
@@ -80,9 +78,9 @@ def find_opposite_color(color: Tuple[int]) -> Tuple[int]:
     return RED
 
 
-def find_winning_tiles_for_color(hexagons: Sequence[Tile],
-                                 empty_tiles: Sequence[Tile],
-                                 color: Tuple[int]) -> List[Tile]:
+def find_winning_tiles_for_color(
+    hexagons: Sequence[Tile], empty_tiles: Sequence[Tile], color: Tuple[int]
+) -> List[Tile]:
     """
     Функция, которая возвращает победные клетки для указанного цвета
     То есть клетки, после закрашивания которых указанный цвет
@@ -105,13 +103,14 @@ def find_neighbour_tiles(hexagons: Sequence[Tile], tiles: Sequence[Tile]) -> Lis
     neighbour_indices = []
     for tile in tiles:
         neighbour_indices = neighbour_indices + list(
-            set(tile.neighbours_indices) - set(neighbour_indices))
+            set(tile.neighbours_indices) - set(neighbour_indices)
+        )
     return [hexagons[index] for index in neighbour_indices]
 
 
-def find_concrete_border_tiles(hexagons: Sequence[Tile],
-                               border_tiles: Sequence[Tile],
-                               color: Tuple[int]) -> List[Tile]:
+def find_concrete_border_tiles(
+    hexagons: Sequence[Tile], border_tiles: Sequence[Tile], color: Tuple[int]
+) -> List[Tile]:
     """
     Получает границу border, выраженную в виде пограничных клеток [border_tiles] и цвет [color].
     Просчитывает множество клеток A = все клетки цвета [color], из которых можно добраться до границы border
@@ -128,20 +127,19 @@ def find_concrete_border_tiles(hexagons: Sequence[Tile],
     for tile in border_tiles:
         if tile.color == color and visit[tile.index] is False:
             visit = visit_neighbours(hexagons, tile.index, visit, color)
-    border_tiles = [tile for tile in border_tiles if
-                    tile not in visit]
-    border_visiting_list_tiles = [hexagon for hexagon in hexagons if
-                                  visit[hexagon.index] is True]
+    border_tiles = [tile for tile in border_tiles if tile not in visit]
+    border_visiting_list_tiles = [
+        hexagon for hexagon in hexagons if visit[hexagon.index] is True
+    ]
     neighbours = find_neighbour_tiles(hexagons, border_visiting_list_tiles)
-    all_border_tiles = border_tiles + list(
-        set(neighbours) - set(border_tiles))
-    empty_border_tiles = list(
-        filter(lambda tile: tile.is_empty(), all_border_tiles))
+    all_border_tiles = border_tiles + list(set(neighbours) - set(border_tiles))
+    empty_border_tiles = list(filter(lambda tile: tile.is_empty(), all_border_tiles))
     return empty_border_tiles
 
 
-def find_field_border_tiles(hexagons: Sequence[Tile],
-                            computer_color: Tuple[int]) -> Tuple[List[Tile], List[Tile]]:
+def find_field_border_tiles(
+    hexagons: Sequence[Tile], computer_color: Tuple[int]
+) -> Tuple[List[Tile], List[Tile]]:
     """
     Принимает все поле [hexagons] и цвет игрока-компьютера [color]
     Возвращает массив А и массив Б.
@@ -150,25 +148,18 @@ def find_field_border_tiles(hexagons: Sequence[Tile],
     Первая и вторая границы - границы, принадлежащие игроку цвета [computer_color] в произвольном порядке.
     """
     if computer_color == BLUE:
-        border1_tiles = [hexagon for hexagon in hexagons if
-                         0 in hexagon.border_indices]
-        border2_tiles = [hexagon for hexagon in hexagons if
-                         2 in hexagon.border_indices]
+        border1_tiles = [hexagon for hexagon in hexagons if 0 in hexagon.border_indices]
+        border2_tiles = [hexagon for hexagon in hexagons if 2 in hexagon.border_indices]
     else:
-        border1_tiles = [hexagon for hexagon in hexagons if
-                         1 in hexagon.border_indices]
-        border2_tiles = [hexagon for hexagon in hexagons if
-                         3 in hexagon.border_indices]
+        border1_tiles = [hexagon for hexagon in hexagons if 1 in hexagon.border_indices]
+        border2_tiles = [hexagon for hexagon in hexagons if 3 in hexagon.border_indices]
 
-    border1_tiles = find_concrete_border_tiles(hexagons, border1_tiles,
-                                               computer_color)
-    border2_tiles = find_concrete_border_tiles(hexagons, border2_tiles,
-                                               computer_color)
+    border1_tiles = find_concrete_border_tiles(hexagons, border1_tiles, computer_color)
+    border2_tiles = find_concrete_border_tiles(hexagons, border2_tiles, computer_color)
     return border1_tiles, border2_tiles
 
 
-def find_all_distances_from_tile(hexagons: Sequence[Tile],
-                                 tile: Tile) -> Sequence[int]:
+def find_all_distances_from_tile(hexagons: Sequence[Tile], tile: Tile) -> Sequence[int]:
     """
     Функция, которая возвращает массив расстояний
     от данной клетки до всех остальных клеток поля
@@ -186,10 +177,9 @@ def find_all_distances_from_tile(hexagons: Sequence[Tile],
 
     while not frontier.empty():
         current_pair = frontier.get()
-        for next_tile in find_neighbours_of_not_opposite_color(hexagons,
-                                                               current_pair[
-                                                                   0],
-                                                               tile.color):
+        for next_tile in find_neighbours_of_not_opposite_color(
+            hexagons, current_pair[0], tile.color
+        ):
             if next_tile not in reached:
                 frontier.put((next_tile, current_pair[1] + 1))
                 reached.add(next_tile)
@@ -197,8 +187,9 @@ def find_all_distances_from_tile(hexagons: Sequence[Tile],
     return tiles_distances
 
 
-def find_neighbours_of_not_opposite_color(hexagons: Sequence[Tile],
-                                          tile: Tile, color: Tuple[int]):
+def find_neighbours_of_not_opposite_color(
+    hexagons: Sequence[Tile], tile: Tile, color: Tuple[int]
+):
     """
     Функция, которая возвращает соседей клетки [tile],
     которые либо пусты, либо имеют цвет, переданный как параметр.
@@ -214,8 +205,9 @@ def find_neighbours_of_not_opposite_color(hexagons: Sequence[Tile],
     return neighbours
 
 
-def find_path_from_tile_to_tile(hexagons: Sequence[Tile], tile1: Tile,
-                                tile2: Tile) -> List[Tile]:
+def find_path_from_tile_to_tile(
+    hexagons: Sequence[Tile], tile1: Tile, tile2: Tile
+) -> List[Tile]:
     """
     Функция, которая возвращает массив клеток поля [hexagons],
     представляющий путь из клетки [tile1] в клетку [tile2], проходящий по клеткам, которые либо пустые,
@@ -231,9 +223,9 @@ def find_path_from_tile_to_tile(hexagons: Sequence[Tile], tile1: Tile,
 
     while not frontier.empty():
         current = frontier.get()
-        for next_tile in find_neighbours_of_not_opposite_color(hexagons,
-                                                               current,
-                                                               tile1.color):
+        for next_tile in find_neighbours_of_not_opposite_color(
+            hexagons, current, tile1.color
+        ):
             if next_tile not in came_from:
                 frontier.put(next_tile)
                 came_from[next_tile] = current
@@ -248,25 +240,26 @@ def find_path_from_tile_to_tile(hexagons: Sequence[Tile], tile1: Tile,
     return path
 
 
-def make_easy_computer_turn(hexagons: Sequence[Tile],
-                            empty_tiles: Sequence[Tile],
-                            computer_color: Tuple[int]) -> Tile:
+def make_easy_computer_turn(
+    hexagons: Sequence[Tile], empty_tiles: Sequence[Tile], computer_color: Tuple[int]
+) -> Tile:
     """
     Функция, которая вернёт случайную клетку, расположенную
     рядом с одной из закрашенных клеток игрока
     Считается не самым умным ходом бота
     """
-    player_colored_tiles = [hexagon for hexagon in hexagons if
-                            hexagon.color == find_opposite_color(
-                                computer_color)]
-    tiles_next_to_player = find_neighbour_tiles(hexagons,
-                                                player_colored_tiles)
-    return random.choice(
-        [tile for tile in empty_tiles if tile in tiles_next_to_player])
+    player_colored_tiles = [
+        hexagon
+        for hexagon in hexagons
+        if hexagon.color == find_opposite_color(computer_color)
+    ]
+    tiles_next_to_player = find_neighbour_tiles(hexagons, player_colored_tiles)
+    return random.choice([tile for tile in empty_tiles if tile in tiles_next_to_player])
 
 
-def make_hard_computer_turn(hexagons: Sequence[Tile],
-                            computer_color: Tuple[int]) -> Tile:
+def make_hard_computer_turn(
+    hexagons: Sequence[Tile], computer_color: Tuple[int]
+) -> Tile:
     """
     Функция, которая вернёт клетку, которая
     начнёт строить цепь от одной границы поля, выигрышной для бота
@@ -274,36 +267,35 @@ def make_hard_computer_turn(hexagons: Sequence[Tile],
     Функция рассматривает все клетки, связанные с первой границей, принадлежащей боту и клетки, связанные
     со второй границей, принадлежащей боту.
     """
-    border1_tiles, border2_tiles = find_field_border_tiles(hexagons,
-                                                           computer_color)
+    border1_tiles, border2_tiles = find_field_border_tiles(hexagons, computer_color)
     border_distances_pairs = []  # distances from border1 to border2
     for tile1 in border1_tiles:
-        distance_from_tile1_to_all_tiles = find_all_distances_from_tile(
-            hexagons, tile1)
+        distance_from_tile1_to_all_tiles = find_all_distances_from_tile(hexagons, tile1)
         for tile2 in border2_tiles:
-            distance_from_tile1_to_tile2 = distance_from_tile1_to_all_tiles[
-                tile2.index]
+            distance_from_tile1_to_tile2 = distance_from_tile1_to_all_tiles[tile2.index]
             if distance_from_tile1_to_tile2 != -1:
                 border_distances_pairs.append(
-                    (tile1, tile2, distance_from_tile1_to_tile2))
+                    (tile1, tile2, distance_from_tile1_to_tile2)
+                )
     # сортируем расстояния, так чтобы наименьшее расстояние было первым в списке
     border_distances_pairs = sorted(
-        border_distances_pairs,
-        key=lambda element: element[2])
+        border_distances_pairs, key=lambda element: element[2]
+    )
     # оставляем расстояния, которые равны самому лучшему расстоянию в списке
     best_distances_pairs = list(
-        filter(lambda element: element[2] == border_distances_pairs[0][2],
-               border_distances_pairs))
+        filter(
+            lambda element: element[2] == border_distances_pairs[0][2],
+            border_distances_pairs,
+        )
+    )
     # выбираем случайно пару с наилучшим расстоянием
     best_pair = random.choice(best_distances_pairs)
 
-    computer_path = find_path_from_tile_to_tile(hexagons, best_pair[0],
-                                                best_pair[1])
+    computer_path = find_path_from_tile_to_tile(hexagons, best_pair[0], best_pair[1])
     return [tile for tile in computer_path if tile.is_empty()][0]
 
 
-def find_best_tile_for_bot(hexagons: Sequence[Tile],
-                           computer_color: Tuple[int]):
+def find_best_tile_for_bot(hexagons: Sequence[Tile], computer_color: Tuple[int]):
     """
     Функция, которая вернёт наиболее подходящий индекс клетки
     для компьютера в следующем приоритете:
@@ -313,12 +305,12 @@ def find_best_tile_for_bot(hexagons: Sequence[Tile],
     3.2) Либо клетка "сложного" хода
     """
     empty_tiles = [hexagon for hexagon in hexagons if hexagon.color == WHITE]
-    player_winning_tiles = find_winning_tiles_for_color(hexagons, empty_tiles,
-                                                        find_opposite_color(
-                                                            computer_color))
-    computer_winning_tiles = find_winning_tiles_for_color(hexagons,
-                                                          empty_tiles,
-                                                          computer_color)
+    player_winning_tiles = find_winning_tiles_for_color(
+        hexagons, empty_tiles, find_opposite_color(computer_color)
+    )
+    computer_winning_tiles = find_winning_tiles_for_color(
+        hexagons, empty_tiles, computer_color
+    )
     if len(computer_winning_tiles) != 0:
         return random.choice(computer_winning_tiles)
     if len(player_winning_tiles) != 0:

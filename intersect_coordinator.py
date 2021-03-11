@@ -12,10 +12,12 @@ def on_segment(p: tuple, q: tuple, r: tuple) -> bool:
     the function checks if point q lies
     on line segment 'pr'
     """
-    if ((q[0] <= max(p[0], r[0])) &
-            (q[0] >= min(p[0], r[0])) &
-            (q[1] <= max(p[1], r[1])) &
-            (q[1] >= min(p[1], r[1]))):
+    if (
+        (q[0] <= max(p[0], r[0]))
+        & (q[0] >= min(p[0], r[0]))
+        & (q[1] <= max(p[1], r[1]))
+        & (q[1] >= min(p[1], r[1]))
+    ):
         return True
 
     return False
@@ -29,10 +31,7 @@ def orientation(p: tuple, q: tuple, r: tuple) -> int:
     1 --> Clockwise
     2 --> Counterclockwise
     """
-    val = (((q[1] - p[1]) *
-            (r[0] - q[0])) -
-           ((q[0] - p[0]) *
-            (r[1] - q[1])))
+    val = ((q[1] - p[1]) * (r[0] - q[0])) - ((q[0] - p[0]) * (r[1] - q[1]))
 
     if val == 0:
         return 0
@@ -105,24 +104,20 @@ def is_inside_polygon(points: list, p: tuple) -> bool:
         # Check if the line segment from 'p' to
         # 'extreme' intersects with the line
         # segment from 'polygon[i]' to 'polygon[next]'
-        if (do_intersect(points[i],
-                         points[next],
-                         p, extreme)):
+        if do_intersect(points[i], points[next], p, extreme):
 
             # If the point 'p' is colinear with line
             # segment 'i-next', then check if it lies
             # on segment. If it lies, return true, otherwise false
-            if orientation(points[i], p,
-                           points[next]) == 0:
-                return on_segment(points[i], p,
-                                  points[next])
+            if orientation(points[i], p, points[next]) == 0:
+                return on_segment(points[i], p, points[next])
 
             count += 1
 
         i = next
 
-        if (i == 0):
+        if i == 0:
             break
 
     # Return true if count is odd, false otherwise
-    return (count % 2 == 1)
+    return count % 2 == 1

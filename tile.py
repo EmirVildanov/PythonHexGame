@@ -9,25 +9,19 @@ def define_hexagon_neighbours_indices(i_index: int, j_index: int):
     hexagon_neighbours_indices = []
     # diagonal left to right
     if i_index - 1 >= 0:
-        hexagon_neighbours_indices.append(
-            (i_index - 1) * FIELD_SIDE + j_index)
+        hexagon_neighbours_indices.append((i_index - 1) * FIELD_SIDE + j_index)
     if i_index + 1 < FIELD_SIDE:
-        hexagon_neighbours_indices.append(
-            (i_index + 1) * FIELD_SIDE + j_index)
+        hexagon_neighbours_indices.append((i_index + 1) * FIELD_SIDE + j_index)
     # diagonal right to left
     if i_index - 1 >= 0 and j_index + 1 < FIELD_SIDE:
-        hexagon_neighbours_indices.append(
-            (i_index - 1) * FIELD_SIDE + (j_index + 1))
+        hexagon_neighbours_indices.append((i_index - 1) * FIELD_SIDE + (j_index + 1))
     if i_index + 1 < FIELD_SIDE and j_index - 1 >= 0:
-        hexagon_neighbours_indices.append(
-            (i_index + 1) * FIELD_SIDE + (j_index - 1))
+        hexagon_neighbours_indices.append((i_index + 1) * FIELD_SIDE + (j_index - 1))
     # vertical neighbours
     if j_index - 1 >= 0:
-        hexagon_neighbours_indices.append(
-            i_index * FIELD_SIDE + (j_index - 1))
+        hexagon_neighbours_indices.append(i_index * FIELD_SIDE + (j_index - 1))
     if j_index + 1 < FIELD_SIDE:
-        hexagon_neighbours_indices.append(
-            i_index * FIELD_SIDE + (j_index + 1))
+        hexagon_neighbours_indices.append(i_index * FIELD_SIDE + (j_index + 1))
     return hexagon_neighbours_indices
 
 
@@ -76,6 +70,7 @@ class Tile:
     """
     Класс, который представляет из себя сущность клетки поля
     """
+
     def __init__(self, i, j):
         hexagon_index = i * FIELD_SIDE + j
         first_hexagon_upper_x = H1
@@ -84,11 +79,10 @@ class Tile:
         neighbours_indices = define_hexagon_neighbours_indices(i, j)
 
         upper_x_coordinate = first_hexagon_upper_x + (i * H1) + (j * H1 * 2)
-        upper_y_coordinate = first_hexagon_upper_y + (
-                i * HEXAGON_SIDE_IN_PX * 3 / 2.)
-        coordinates = get_hexagon_coordinates(upper_x_coordinate,
-                                              upper_y_coordinate,
-                                              HEXAGON_SIDE_IN_PX)
+        upper_y_coordinate = first_hexagon_upper_y + (i * HEXAGON_SIDE_IN_PX * 3 / 2.0)
+        coordinates = get_hexagon_coordinates(
+            upper_x_coordinate, upper_y_coordinate, HEXAGON_SIDE_IN_PX
+        )
         self.color = WHITE
         self.index = hexagon_index
         self.coordinates = coordinates

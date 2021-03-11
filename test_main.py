@@ -7,10 +7,12 @@ def test_should_return_correct_menu_button_coordinates():
     button_height = 30
     buttons_y = SCREEN_HEIGHT / 5 * 3
     button1_x = SCREEN_WIDTH / 5
-    assert [(110.8, 204.0), (260.8, 204.0), (260.8, 234.0),
-            (110.8, 234.0)] == find_button_coordinates(button1_x, buttons_y,
-                                                       button_width,
-                                                       button_height)
+    assert [
+        (110.8, 204.0),
+        (260.8, 204.0),
+        (260.8, 234.0),
+        (110.8, 234.0),
+    ] == find_button_coordinates(button1_x, buttons_y, button_width, button_height)
 
 
 def test_should_find_field_border_coordinates():
@@ -63,14 +65,12 @@ def test_should_correctly_react_on_mouse_click_during_the_game():
         current_tile_index = filling_line_index * FIELD_SIDE + j
         hexagons[current_tile_index].color = winner_color
     winning_tile_index = filling_line_index * FIELD_SIDE + (FIELD_SIDE - 1)
-    event = pygame.event.Event(pygame.MOUSEBUTTONDOWN,
-                               {'pos': (375, 214), 'button': 1,
-                                'window': None})
+    event = pygame.event.Event(
+        pygame.MOUSEBUTTONDOWN, {"pos": (375, 214), "button": 1, "window": None}
+    )
     state, turn_color, _, winner = handle_game_event(
-        hexagons, is_bot_on,
-        state, turn_color,
-        winning_tile_index,
-        event)
+        hexagons, is_bot_on, state, turn_color, winning_tile_index, event
+    )
     assert GameState.FINISHED is state
     assert RED == turn_color
     assert BLUE == winner
@@ -88,13 +88,10 @@ def test_should_correctly_react_on_mouse_click_during_the_menu():
         current_tile_index = filling_line_index * FIELD_SIDE + j
         hexagons[current_tile_index].color = winner_color
     hovered_btn_index = 2
-    event = pygame.event.Event(pygame.MOUSEBUTTONDOWN,
-                               {'pos': (403, 218), 'button': 1,
-                                'window': None})
-    state, is_bot_on, _ = handle_menu_event(state,
-                                            is_bot_on,
-                                            hovered_btn_index,
-                                            event)
+    event = pygame.event.Event(
+        pygame.MOUSEBUTTONDOWN, {"pos": (403, 218), "button": 1, "window": None}
+    )
+    state, is_bot_on, _ = handle_menu_event(state, is_bot_on, hovered_btn_index, event)
     assert GameState.IN_PROGRESS is state
     assert True is is_bot_on
     assert GameState.IN_PROGRESS == state
